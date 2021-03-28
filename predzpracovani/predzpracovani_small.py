@@ -85,7 +85,7 @@ for i in range(0,5):
 
 #cv2.imwrite('tenzor_klestici.jpg', full_img_img)
 
-tmp1=mask_create_add(mask_list)
-tmp2=mask_create_multiply(mask_list)
+#tmp1=mask_create_add(mask_list)
+#tmp2=mask_create_multiply(mask_list)
 
 print()
