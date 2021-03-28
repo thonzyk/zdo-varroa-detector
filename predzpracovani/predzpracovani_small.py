@@ -9,8 +9,8 @@ def mask_create_add(mask_list):
     retyped=[]
     for i in mask_list:
         retyped.append(i.astype("float32"))
-    template=sum(retyped)/len(mask_list)
-    return template
+    template=sum(retyped)/len(retyped)
+    return template/template.max()
 
 
 def mask_create_multiply(mask_list):
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     print(img_names)
     print(mask_names)
 
-    neighborhood=14
+    neighborhood=30
     size_img=2*neighborhood
 
     mask_list=[]
@@ -65,27 +65,30 @@ if __name__ == '__main__':
             # cv2.waitKey(0)
             img_list.append(mat2)
 
-np.save('maska_tenzor',mask_list)
+    #np.save('maska_tenzor',mask_list)
 
-full_img_mask=np.zeros(shape=(5*size_img,5*size_img))
-k=0
-for i in range(0,5):
-    for j in range(0, 5):
-        full_img_mask[i*size_img:i*size_img+size_img,j*size_img:j*size_img+size_img]=mask_list[k]
-        k = k + 1
+    full_img_mask=np.zeros(shape=(5*size_img,5*size_img))
+    k=0
+    for i in range(0,5):
+        for j in range(0, 5):
+            full_img_mask[i*size_img:i*size_img+size_img,j*size_img:j*size_img+size_img]=mask_list[k]
+            k = k + 1
 
-#matplotlib.image.imsave('tenzor_mask.jpg', full_img_mask)
+    matplotlib.image.imsave('tenzor_mask.jpg', full_img_mask)
 
-full_img_img=np.zeros(shape=(5*size_img,5*size_img,3))
-k=0
-for i in range(0,5):
-    for j in range(0, 5):
-        full_img_img[i*size_img:i*size_img+size_img,j*size_img:j*size_img+size_img]=img_list[k]
-        k=k+1
+    full_img_img=np.zeros(shape=(5*size_img,5*size_img,3))
+    k=0
+    for i in range(0,5):
+        for j in range(0, 5):
+            full_img_img[i*size_img:i*size_img+size_img,j*size_img:j*size_img+size_img]=img_list[k]
+            k=k+1
 
-#cv2.imwrite('tenzor_klestici.jpg', full_img_img)
+    cv2.imwrite('tenzor_klestici.jpg', full_img_img)
 
-#tmp1=mask_create_add(mask_list)
-#tmp2=mask_create_multiply(mask_list)
+    tmp1=mask_create_add(mask_list)
+    tmp2=mask_create_multiply(mask_list)
+
+    # np.save('mask_add',tmp1)
+    # np.save('mask_multiply',tmp2)
 
 print()
