@@ -5,7 +5,7 @@ from skimage import io
 from algorithm.necessary_condition import get_necessary_heatmap
 from algorithm.filter_large import remove_large_regions
 from algorithm.fill_points import fill_points
-
+from algorithm.shape_filtering import filter_by_shape
 
 parser = argparse.ArgumentParser(description='Generates sequences for labeling task')
 parser.add_argument('input_file', metavar='INPUT', type=str, help='Path to .npy file containing label mask.')
@@ -22,5 +22,6 @@ if __name__ == '__main__':
 
     mask = fill_points(image, mask)
 
+    mask = filter_by_shape(mask)
 
     np.save('../evaluation/out.npy', mask)
