@@ -24,12 +24,13 @@ def mask_create_multiply(mask_list):
 
 if __name__ == '__main__':
 
-    relevant_path = "C:/Users/poker/Downloads/small_MASK_dataset"
+    relevant_path_mask = "../MASK-sieberm/SegmentationClass"
+    relevant_path_img = "../MASK-sieberm/JPEGImages"
     extension_jpg = ['jpg']
     extension_png = ['png']
-    img_names = [fn for fn in os.listdir(relevant_path)
+    img_names = [fn for fn in os.listdir(relevant_path_img)
                   if any(fn.endswith(ext) for ext in extension_jpg)]
-    mask_names = [fn for fn in os.listdir(relevant_path)
+    mask_names = [fn for fn in os.listdir(relevant_path_mask)
                   if any(fn.endswith(ext) for ext in extension_png)]
 
     print(img_names)
@@ -42,10 +43,11 @@ if __name__ == '__main__':
     img_list=[]
 
     for index in range(0,len(mask_names)):
-        im = cv2.imread(relevant_path+'/'+mask_names[index])         #mask
+        im = cv2.imread(relevant_path_mask+'/'+mask_names[index])         #mask
         imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)   #grey mask
 
-        im2 = cv2.imread(relevant_path + '/' + img_names[index])  # img
+        im2_rot = cv2.imread(relevant_path_img + '/' + img_names[index])  # img
+        im2= cv2.rotate(im2_rot,cv2.ROTATE_90_COUNTERCLOCKWISE)
 
         ret, thresh = cv2.threshold(imgray,20,255,cv2.THRESH_BINARY)
         _, countours,_ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -67,26 +69,35 @@ if __name__ == '__main__':
 
     #np.save('maska_tenzor',mask_list)
 
-    full_img_mask=np.zeros(shape=(5*size_img,5*size_img))
+
+    final_size=12
+
+    full_img_mask=np.zeros(shape=(final_size*size_img,final_size*size_img))
     k=0
-    for i in range(0,5):
-        for j in range(0, 5):
-            full_img_mask[i*size_img:i*size_img+size_img,j*size_img:j*size_img+size_img]=mask_list[k]
+    for i in range(0,final_size):
+        for j in range(0, final_size):
+            try:
+                full_img_mask[i*size_img:i*size_img+size_img,j*size_img:j*size_img+size_img]=mask_list[k]
+            except:
+                print("klestik na kraji")
             k = k + 1
 
     matplotlib.image.imsave('tenzor_mask.jpg', full_img_mask)
 
-    full_img_img=np.zeros(shape=(5*size_img,5*size_img,3))
+    full_img_img=np.zeros(shape=(final_size*size_img,final_size*size_img,3))
     k=0
-    for i in range(0,5):
-        for j in range(0, 5):
-            full_img_img[i*size_img:i*size_img+size_img,j*size_img:j*size_img+size_img]=img_list[k]
+    for i in range(0,final_size):
+        for j in range(0, final_size):
+            try:
+                full_img_img[i*size_img:i*size_img+size_img,j*size_img:j*size_img+size_img]=img_list[k]
+            except:
+                print("klestik na kraji")
             k=k+1
 
     cv2.imwrite('tenzor_klestici.jpg', full_img_img)
 
-    tmp1=mask_create_add(mask_list)
-    tmp2=mask_create_multiply(mask_list)
+    #tmp1=mask_create_add(mask_list)
+    #tmp2=mask_create_multiply(mask_list)
 
     # np.save('mask_add',tmp1)
     # np.save('mask_multiply',tmp2)
