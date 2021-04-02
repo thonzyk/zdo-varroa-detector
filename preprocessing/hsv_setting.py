@@ -4,7 +4,7 @@ import numpy as np
 calibrate = 1;  #enable calibration trackbars for color and scene adjustments; disable when setup done!!!
 
 # setup
-setup = [21, 17, 0, 255, 255, 169, 100, 500, 100, 400]  # [min H, min S, min V, max H, max S, max V, x1, x2, y1, y2]
+setup = [0, 33, 0, 255, 255, 201, 100, 500, 100, 400]  # [min H, min S, min V, max H, max S, max V, x1, x2, y1, y2]
 
 
 def nothing(*arg):
