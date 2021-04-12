@@ -1,11 +1,12 @@
 import cv2
 import numpy as np
 
+size_of_blur=11
 calibrate = 1;  #enable calibration trackbars for color and scene adjustments; disable when setup done!!!
 
 # setup
 setup = [0, 33, 0, 255, 255, 201, 100, 500, 100, 400]  # [min H, min S, min V, max H, max S, max V, x1, x2, y1, y2]
-
+setup_invert=[12, 0, 0, 121, 231, 253]
 
 def nothing(*arg):
     pass
@@ -74,7 +75,7 @@ while (True):
     else:
         frame = frame[setup[8]:setup[9], setup[6]:setup[7]]
 
-    blur_image = cv2.medianBlur(frame, 3)
+    blur_image = cv2.medianBlur(frame, size_of_blur)
     hsv_image = cv2.cvtColor(blur_image, cv2.COLOR_BGR2HSV)
 
     if (calibrate):
