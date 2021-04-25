@@ -9,11 +9,15 @@ size_of_blur = 11
 
 def template_match_tst(img):
 
-    template = cv2.imread('tst_vzor2a.jpg')
+    template = cv2.imread('tst_vzor5.png')
 
     res = cv2.matchTemplate(img, template, cv2.TM_CCORR_NORMED)
-    cv2.imshow('ss',res)
-    cv2.waitKey(0)
+    # min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    res[res < 0.85] = 0
+    # cv2.imshow('ss',res)
+    # cv2.waitKey(0)
+
+    return res
 
 
 def create_hue_mask(image, lower_color, upper_color):
@@ -24,6 +28,7 @@ def create_hue_mask(image, lower_color, upper_color):
     mask = cv2.inRange(image, lower, upper)
     mask_invert = cv2.bitwise_not(mask)
 
+
     kernel = np.ones((3, 3), np.uint8) #todo definice nova
     mask_invert_e = cv2.erode(mask_invert, kernel, 1)
     mask_invert_d = cv2.dilate(mask_invert_e, kernel, 1)
@@ -31,18 +36,19 @@ def create_hue_mask(image, lower_color, upper_color):
     return output_image
 
 if __name__== '__main__':
-    im_mask=cv2.imread('tenzor_mask.jpg')
     im_klestici=cv2.imread('tenzor_klestici.jpg')
+    #im_klestici = cv2.imread('../MASK-sieberm/JPEGImages/Original_1305_image.jpg')
 
     blur_image = cv2.medianBlur(im_klestici, size_of_blur)
     hsv_image = cv2.cvtColor(blur_image, cv2.COLOR_BGR2HSV)
 
-
     masked_klestici = create_hue_mask(hsv_image, setup_invert[0:3], setup_invert[3:6])
     masked_image = cv2.cvtColor(masked_klestici, cv2.COLOR_HSV2BGR)
 
-    #template_match_tst(masked_image)
 
-    cv2.imshow('12',masked_image)
-    cv2.waitKey(0)
+    res= template_match_tst(im_klestici) * 255
+    #cv2.imwrite('pattern.jpg', res)
+
+    # cv2.imshow('12', res)
+    # cv2.waitKey(0)
     cv2.destroyAllWindows()

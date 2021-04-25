@@ -1,26 +1,48 @@
 import os
 import cv2
-import matplotlib
 import numpy as np
-from matplotlib import pyplot as plt
 
 
-def mask_create_add(mask_list):
-    retyped = []
-    for i in mask_list:
-        retyped.append(i.astype("float32"))
-    template=sum(retyped)/len(retyped)
-    return template/template.max()
+# def mask_create_add(mask_list):
+#     retyped = []
+#     for i in mask_list:
+#         retyped.append(i.astype("float32"))
+#     template=sum(retyped)/len(retyped)
+#     return template/template.max()
+#
+#
+# def mask_create_multiply(mask_list):
+#     retyped = []
+#     for i in mask_list:
+#         retyped.append(i.astype("float32"))
+#     template=retyped[0]
+#     for index in range(1,len(retyped)):
+#         template=template*retyped[index]
+#     return template
 
+def create_rgb_template(image_list, mask_list):
+    if len(image_list) == len(mask_list):
+        print('OK')
+    pure_klestik_list=[]
+    for i in range(0, len(image_list)-1):
+        pure_klestik_list.append(cv2.bitwise_and(image_list[i], image_list[i], mask=mask_list[i]))
 
-def mask_create_multiply(mask_list):
-    retyped = []
-    for i in mask_list:
-        retyped.append(i.astype("float32"))
-    template=retyped[0]
-    for index in range(1,len(retyped)):
-        template=template*retyped[index]
-    return template
+    pure_klestik_clist=[]
+    for val in pure_klestik_list:
+        if type(val).__module__ == np.__name__:
+            pure_klestik_clist.append(val)
+
+    img_add = pure_klestik_clist[0]
+    img_test = np.array(img_add, np.uint32)
+    klestik_counter = 1
+    for j in range(1,len(pure_klestik_clist)-1):
+        if pure_klestik_clist[j].shape[0] == 60 and pure_klestik_clist[j].shape[1] == 60:
+            img_test += pure_klestik_clist[j]
+            klestik_counter += 1
+    img_div = img_test / klestik_counter
+    im_show = np.array(img_div, np.uint8)
+
+    return im_show
 
 if __name__ == '__main__':
 
@@ -67,39 +89,6 @@ if __name__ == '__main__':
             # cv2.waitKey(0)
             img_list.append(mat2)
 
-    #np.save('maska_tenzor',mask_list)
-
-
-    final_size = 12
-
-    full_img_mask = np.zeros(shape=(final_size*size_img, final_size*size_img))
-    k = 0
-    for i in range(0, final_size):
-        for j in range(0, final_size):
-            try:
-                full_img_mask[i*size_img:i*size_img+size_img, j*size_img:j*size_img+size_img] = mask_list[k]
-            except:
-                print("klestik na kraji")
-            k = k + 1
-
-    matplotlib.image.imsave('tenzor_mask.jpg', full_img_mask)
-
-    full_img_img = np.zeros(shape=(final_size*size_img, final_size*size_img, 3))
-    k = 0
-    for i in range(0, final_size):
-        for j in range(0, final_size):
-            try:
-                full_img_img[i*size_img:i*size_img+size_img, j*size_img:j*size_img+size_img] = img_list[k]
-            except:
-                print("klestik na kraji")
-            k = k+1
-
-    cv2.imwrite('tenzor_klestici.jpg', full_img_img)
-
-    #tmp1=mask_create_add(mask_list)
-    #tmp2=mask_create_multiply(mask_list)
-
-    # np.save('mask_add',tmp1)
-    # np.save('mask_multiply',tmp2)
-
-print()
+    rgb_template=create_rgb_template(img_list,mask_list)
+    cv2.imshow('klestik', rgb_template)
+    cv2.waitKey(0)
