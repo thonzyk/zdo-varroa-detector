@@ -35,8 +35,8 @@ def create_hue_mask(image, lower_color=(12, 0, 0), upper_color=(121, 231, 253)):
     kernel = np.ones((3, 3), np.uint8) #todo definice nova
     mask_invert_e = cv2.erode(mask_invert, kernel, 1)
     mask_invert_d = cv2.dilate(mask_invert_e, kernel, 1)
-    output_image = cv2.bitwise_and(image, image, mask=mask_invert_d)
-    return output_image
+    #output_image = cv2.bitwise_and(image, image, mask=mask_invert_d)
+    return mask_invert_d
 
 if __name__== '__main__':
     #im_klestici=cv2.imread('tenzor_klestici.jpg')
