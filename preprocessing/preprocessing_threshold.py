@@ -23,7 +23,7 @@ def template_match_tst(img):
     return out
 
 
-def create_hue_mask(image, lower_color=[12, 0, 0], upper_color=[121, 231, 253]):
+def create_hue_mask(image, lower_color=(12, 0, 0), upper_color=(121, 231, 253)):
     lower = np.array(lower_color, np.uint8)
     upper = np.array(upper_color, np.uint8)
 
@@ -45,7 +45,7 @@ if __name__== '__main__':
     blur_image = cv2.medianBlur(im_klestici, size_of_blur)
     hsv_image = cv2.cvtColor(blur_image, cv2.COLOR_BGR2HSV)
 
-    masked_klestici = create_hue_mask(hsv_image, setup_invert[0:3], setup_invert[3:6])
+    masked_klestici = create_hue_mask(hsv_image)#, setup_invert[0:3], setup_invert[3:6])
     masked_image = cv2.cvtColor(masked_klestici, cv2.COLOR_HSV2BGR)
 
     h1, w1 = im_klestici.shape[:2]
