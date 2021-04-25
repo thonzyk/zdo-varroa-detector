@@ -5,6 +5,8 @@ import matplotlib
 setup = [0, 33, 0, 255, 255, 201] # [min H, min S, min V, max H, max S, max V]
 setup_invert = [12, 0, 0, 121, 231, 253]  #min H highly sensitive
 
+new_set = [0,26,0,255,255,145]
+
 size_of_blur = 11
 
 def template_match_tst(img):
@@ -23,7 +25,7 @@ def template_match_tst(img):
     return out
 
 
-def create_hue_mask(image, lower_color=(12, 0, 0), upper_color=(121, 231, 253)):
+def create_hue_mask(image, lower_color=(0,26,0), upper_color=(255,255,145)):
     lower = np.array(lower_color, np.uint8)
     upper = np.array(upper_color, np.uint8)
 
