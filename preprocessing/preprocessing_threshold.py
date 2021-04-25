@@ -38,7 +38,7 @@ def create_hue_mask(image, lower_color=(9,0,110), upper_color=(126,161,255)):
     mask_invert_e = cv2.erode(mask_invert, kernel, 1)
     mask_invert_d = cv2.dilate(mask_invert_e, kernel, 1)
     output_image = cv2.bitwise_and(image, image, mask=mask_invert)
-    return output_image
+    return mask_invert
 
 if __name__== '__main__':
     im_klestici=cv2.imread('tenzor_klestici.jpg')
