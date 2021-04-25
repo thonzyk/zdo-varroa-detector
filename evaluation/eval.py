@@ -23,6 +23,7 @@ if __name__ == '__main__':
     # plt.imshow(y_true)
     # plt.figure()
     # plt.imshow(y_pred)
+    # plt.show()
 
     y_true = y_true.reshape((y_true.size,))
     y_pred = y_pred.reshape((y_pred.size,))
