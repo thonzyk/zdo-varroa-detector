@@ -13,14 +13,17 @@ def template_match_tst(img):
 
     res = cv2.matchTemplate(img, template, cv2.TM_CCORR_NORMED)
     # min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-    res[res < 0.85] = 0
+
+    #res[res < 0.85] = 0
+
     # cv2.imshow('ss',res)
     # cv2.waitKey(0)
+    out = res > 0.85
 
-    return res
+    return out
 
 
-def create_hue_mask(image, lower_color, upper_color):
+def create_hue_mask(image, lower_color=[12, 0, 0], upper_color=[121, 231, 253]):
     lower = np.array(lower_color, np.uint8)
     upper = np.array(upper_color, np.uint8)
 
@@ -36,8 +39,8 @@ def create_hue_mask(image, lower_color, upper_color):
     return output_image
 
 if __name__== '__main__':
-    im_klestici=cv2.imread('tenzor_klestici.jpg')
-    #im_klestici = cv2.imread('../MASK-sieberm/JPEGImages/Original_1305_image.jpg')
+    #im_klestici=cv2.imread('tenzor_klestici.jpg')
+    im_klestici = cv2.imread('../MASK-sieberm/JPEGImages/Original_1305_image.jpg')
 
     blur_image = cv2.medianBlur(im_klestici, size_of_blur)
     hsv_image = cv2.cvtColor(blur_image, cv2.COLOR_BGR2HSV)
@@ -45,10 +48,13 @@ if __name__== '__main__':
     masked_klestici = create_hue_mask(hsv_image, setup_invert[0:3], setup_invert[3:6])
     masked_image = cv2.cvtColor(masked_klestici, cv2.COLOR_HSV2BGR)
 
-
-    res= template_match_tst(im_klestici) * 255
-    #cv2.imwrite('pattern.jpg', res)
-
+    h1, w1 = im_klestici.shape[:2]
+    out=np.zeros([h1,w1])
+    res= template_match_tst(im_klestici)# * 255
+    h2, w2 = res.shape[:2]
+    out[int((h1-h2)/2):int(h2+(h1-h2)/2), int((w1-w2)/2):int(w2+(w1-w2)/2)] = res
+    out=np.rot90(out)
+    np.save('../evaluation/out',out)
     # cv2.imshow('12', res)
     # cv2.waitKey(0)
     cv2.destroyAllWindows()
