@@ -36,7 +36,7 @@ def create_hue_mask(image, lower_color=(12, 0, 0), upper_color=(121, 231, 253)):
     mask_invert_e = cv2.erode(mask_invert, kernel, 1)
     mask_invert_d = cv2.dilate(mask_invert_e, kernel, 1)
     #output_image = cv2.bitwise_and(image, image, mask=mask_invert_d)
-    return mask_invert_d
+    return mask_invert
 
 if __name__== '__main__':
     #im_klestici=cv2.imread('tenzor_klestici.jpg')
@@ -46,6 +46,9 @@ if __name__== '__main__':
     hsv_image = cv2.cvtColor(blur_image, cv2.COLOR_BGR2HSV)
 
     masked_klestici = create_hue_mask(hsv_image)#, setup_invert[0:3], setup_invert[3:6])
+    cv2.imshow('a',masked_klestici)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     masked_image = cv2.cvtColor(masked_klestici, cv2.COLOR_HSV2BGR)
 
     h1, w1 = im_klestici.shape[:2]
