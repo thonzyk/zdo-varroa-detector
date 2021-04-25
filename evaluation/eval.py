@@ -1,5 +1,6 @@
 import argparse
 
+from matplotlib.pyplot import imread
 import numpy as np
 from sklearn.metrics import f1_score, confusion_matrix
 from sklearn.metrics import plot_confusion_matrix
@@ -13,7 +14,9 @@ parser.add_argument('pred_file', metavar='PRED', type=str, help='Path to .npy fi
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    y_true = np.load(args.label_file).astype('bool')
+    y_true = imread(args.label_file)
+    y_true = y_true[:, :, 0] > 0.1
+
     y_pred = np.load(args.pred_file)
 
     # plt.figure()
