@@ -32,8 +32,6 @@ def get_necessary_heatmap(image):
 
     return heat_map
 
-
-
     # plt.figure()
     # plt.imshow(threshold_heat_map)
     #

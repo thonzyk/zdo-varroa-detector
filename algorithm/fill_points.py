@@ -31,7 +31,7 @@ def store_evolution_in(lst):
     return _store
 
 
-def fill_points(image, mask):
+def fill_points(image, mask, threshold):
     regions = regionprops(label(mask))
 
     morph_regions_coord = []
@@ -64,6 +64,6 @@ def fill_points(image, mask):
         y_from = region[1][0]
         y_to = region[1][1]
 
-        mask[x_from:x_to, y_from:y_to] = cut < 0.3
+        mask[x_from:x_to, y_from:y_to] = cut < threshold
 
     return mask

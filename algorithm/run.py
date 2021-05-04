@@ -27,12 +27,12 @@ if __name__ == '__main__':
 
     heat_map = get_necessary_heatmap(image)
 
-    mask = heat_map > 0.25
+    mask = heat_map > 0.15
 
-    mask = remove_large_regions(mask)
+    mask = remove_large_regions(mask, 10000)
 
-    mask = fill_points(image, mask)
+    mask = fill_points(image, mask, 0.3)
 
     mask = filter_by_shape(mask)
 
-    np.save('../evaluation/out.npy', np.rot90(mask))
+    np.save('../evaluation/out.npy', mask)
