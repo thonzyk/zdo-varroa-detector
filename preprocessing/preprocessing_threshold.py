@@ -41,17 +41,19 @@ def create_hue_mask(image, lower_color=(9,0,110), upper_color=(126,161,255)):
     return mask_invert
 
 if __name__== '__main__':
-    im_klestici=cv2.imread('tenzor_klestici.jpg')
-    #im_klestici = cv2.imread('../MASK-sieberm/JPEGImages/Original_1305_image.jpg')
+    #im_klestici=cv2.imread('tenzor_klestici.jpg')
+    im_klestici = cv2.imread('../MASK-sieberm/JPEGImages/Original_1305_image.jpg')
+    # im_klestici = cv2.imread('../images/concat_jpg.png')
 
     blur_image = cv2.medianBlur(im_klestici, size_of_blur)
     hsv_image = cv2.cvtColor(blur_image, cv2.COLOR_BGR2HSV)
 
     masked_klestici = create_hue_mask(hsv_image)#, setup_invert[0:3], setup_invert[3:6])
-    # cv2.imshow('a',masked_klestici)
-    # cv2.waitKey(0)
+    cv2.imwrite('a.png',masked_klestici)
+    cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    masked_image = cv2.cvtColor(masked_klestici, cv2.COLOR_HSV2BGR)
+    # masked_image = cv2.cvtColor(masked_klestici, cv2.COLOR_HSV2BGR)
+
 
     h1, w1 = im_klestici.shape[:2]
     out=np.zeros([h1,w1])
