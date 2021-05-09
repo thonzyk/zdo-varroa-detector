@@ -11,7 +11,7 @@ import matplotlib
 
 matplotlib.use('Qt5Agg')
 
-THRESHOLD = 0.85
+
 
 
 def load_reference_shapes():
@@ -34,8 +34,9 @@ def get_cut_by_centroid(source, centroid, sizes):
     return cut
 
 
-def filter_by_shape(mask):
-    regions = regionprops(label(mask))
+def filter_by_shape(mask, threshold):
+    mask_c = mask.copy()
+    regions = regionprops(label(mask_c))
 
     reference_shapes = load_reference_shapes()
 
@@ -45,7 +46,7 @@ def filter_by_shape(mask):
     remove_y_list = []
 
     for region in regions:
-        cut = get_cut_by_centroid(mask, region.centroid, cut_shape)
+        cut = get_cut_by_centroid(mask_c, region.centroid, cut_shape)
         if cut.size < cut_shape[0]*cut_shape[1]:
             remove_x_list.extend(region.coords[:, 0].tolist())
             remove_y_list.extend(region.coords[:, 1].tolist())
@@ -58,13 +59,13 @@ def filter_by_shape(mask):
 
         score = np.max(scores) / (cut_shape[0] * cut_shape[1])
 
-        if score < THRESHOLD:
+        if score < threshold:
             remove_x_list.extend(region.coords[:, 0].tolist())
             remove_y_list.extend(region.coords[:, 1].tolist())
 
-    mask[remove_x_list, remove_y_list] = False
+    mask_c[remove_x_list, remove_y_list] = False
 
     # plt.imshow(mask)
     # plt.show()
 
-    return mask
+    return mask_c

@@ -9,19 +9,20 @@ matplotlib.use('Qt5Agg')
 # AREA_THRESHOLD = 100
 
 
-def remove_large_regions(mask, area_threshold):
-    regions = regionprops(label(mask))
+def remove_regions_by_size(mask, lower_limit, upper_limit):
+    mask_c = mask.copy()
+    regions = regionprops(label(mask_c))
 
     remove_x_list = []
     remove_y_list = []
 
     for region in regions:
-        if region.area > area_threshold:
+        if region.area > upper_limit or region.area < lower_limit:
             remove_x_list.extend(region.coords[:, 0].tolist())
             remove_y_list.extend(region.coords[:, 1].tolist())
 
     print()
 
-    mask[remove_x_list, remove_y_list] = False
+    mask_c[remove_x_list, remove_y_list] = False
 
-    return mask
+    return mask_c

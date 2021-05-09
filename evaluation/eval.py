@@ -41,5 +41,3 @@ if __name__ == '__main__':
     plt.figure()
     plt.imshow(y_show)
     plt.show()
-
-    # plt.show()
