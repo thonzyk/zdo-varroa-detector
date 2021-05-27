@@ -29,7 +29,7 @@ if __name__ == '__main__':
     final_mat=sum(mat_list)
 
     template=(final_mat.astype("float32")/19/255)
-    np.save('tmp.npy',template)
+    np.save('nec_cond_maxk.npy',template)
 
 
 

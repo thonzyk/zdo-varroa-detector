@@ -13,7 +13,7 @@ images_path = Path("D:/ML-Data/varroa/segMask/JPEGImages/")
 
 
 def get_distribution_mask():
-    return np.load('tmp.npy')
+    return np.load('nec_cond_maxk.npy')
 
 
 def get_necessary_heatmap(image):

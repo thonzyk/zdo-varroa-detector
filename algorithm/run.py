@@ -3,10 +3,10 @@ import argparse
 from skimage import io
 import cv2
 
-from algorithm.necessary_condition import get_necessary_heatmap
-from algorithm.filter_large import remove_regions_by_size
-from algorithm.fill_points import fill_points
-from algorithm.shape_filtering import filter_by_shape
+from necessary_condition import get_necessary_heatmap
+from filter_large import remove_regions_by_size
+from fill_points import fill_points
+from shape_filtering import filter_by_shape
 from preprocessing.preprocessing_threshold import create_hue_mask
 from matplotlib import pyplot as plt
 import matplotlib
@@ -30,7 +30,9 @@ def plot_comparison(y_true, y_pred):
 
 
 if __name__ == '__main__':
+    # Load parameters
     args = parser.parse_args()
+
     image = io.imread(args.input_file, as_gray=False)
     image_gs = io.imread(args.input_file, as_gray=True)
     image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
