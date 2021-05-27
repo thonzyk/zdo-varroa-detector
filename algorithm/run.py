@@ -49,5 +49,7 @@ if __name__ == '__main__':
         # Filter by shape
         mask = filter_by_shape(mask, 0.85)
 
-        np.save(args.pred_folder+img_name[:-4], mask)
+        mask = np.rot90(mask)
 
+        np.save(args.pred_folder+img_name[:-4], mask)
+        print(img_name + ' DONE')

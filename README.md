@@ -8,15 +8,15 @@ Program spouštěte pomocí skriptu **run.py** s následujícími argumenty:
 
 1. cesta k zdrojové složce (s obrázky ve formátu JPG)
 
-2. cesta k výstupní složce (2D binary ndarray se segmentací)
+2. cesta k výstupní složce ve které budou pouze výstupní soubory .npy (2D binary ndarray se segmentací)
 
 ## Návod ke spuštění evaluace
 
 Vyhodnocení můžete spustit pomocí skriptu **eval.py** s následujícími argumenty:
 
-1. ground true segmentace (.png formát)
+1. cesta ke složce s referenčními anotacemi (.png formát)
 
-2. predikce algoritmu (2D binary ndarray)
+2. cesta ke složce s predikcemi algoritmu (2D binary ndarray, shodná s výstupní složkou z run.py)
 
 ## Návod ke spuštění testu
 

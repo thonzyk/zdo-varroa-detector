@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     _, _, label_names = next(os.walk(args.label_dir))
     _, _, pred_names = next(os.walk(args.pred_dir))
-    names = [el.split('.')[0] for el in label_names]
+    names = [el.split('.')[0] for el in pred_names]
 
     score = 0.0
 
