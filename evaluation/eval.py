@@ -28,6 +28,9 @@ if __name__ == '__main__':
         label_file = name + '.png'
         pred_file = name + '.npy'
 
+        if not os.path.exists(args.label_dir + label_file) or not os.path.exists(args.pred_dir + pred_file):
+            continue
+
         y_true = imread(args.label_dir + label_file)
         y_true = y_true[:, :, 1] > 0.1
 
