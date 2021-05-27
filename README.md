@@ -6,9 +6,9 @@ Computer vision platform for Varroa mite detection
 
 Program spouštěte pomocí skriptu **run.py** s následujícími argumenty:
 
-1. cesta k zdrojovému souboru (vstupní obrázek)
+1. cesta k zdrojové složce (s obrázky ve formátu JPG)
 
-2. cesta k výstupnímu souboru (2D binary ndarray se segmentací)
+2. cesta k výstupní složce (2D binary ndarray se segmentací)
 
 ## Návod ke spuštění evaluace
 

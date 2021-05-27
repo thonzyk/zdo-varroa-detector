@@ -11,10 +11,8 @@ from shape_filtering import filter_by_shape
 from preprocessing.preprocessing_threshold import create_hue_mask
 
 parser = argparse.ArgumentParser(description='Generates sequences for labeling task')
-parser.add_argument('input_file', metavar='INPUT', type=str, help='Path to .npy file containing input image.')
-parser.add_argument('pred_file', metavar='PRED', type=str, help='Path to output .npy file containing prediction mask.')
-parser.add_argument('label_file', metavar='LBL', type=str, help='Path to .npy file containing label mask.', nargs='?',
-                    default=None)
+parser.add_argument('input_folder', metavar='INPUT', type=str, help='Path to .npy file containing input image.')
+parser.add_argument('pred_folder', metavar='PRED', type=str, help='Path to output .npy file containing prediction mask.')
 
 
 def get_hsv_filter(input_file):
@@ -27,14 +25,14 @@ def get_hsv_filter(input_file):
 
 if __name__ == '__main__':
     # Load
-    extension_png = ['png']
-    mask_names = [fn for fn in os.listdir(args.label_file)
-                  if any(fn.endswith(ext) for ext in extension_png)]
-    for mask_name in mask_names:
+    args = parser.parse_args()
 
-        args = parser.parse_args()
-        image_gs = io.imread(args.input_file+'/'+mask_name[:-3]+'jpg', as_gray=True)
-        hue_mask = get_hsv_filter(args.input_file)
+    image_names = [fn for fn in os.listdir(args.input_folder)
+                  if fn.endswith('jpg')]
+    for img_name in image_names:
+
+        image_gs = io.imread(args.input_folder+img_name, as_gray=True)
+        hue_mask = get_hsv_filter(args.input_folder+img_name)
 
         # Filter by hue
         image = image_gs * hue_mask + (hue_mask < 0.5).astype('float32')
@@ -51,4 +49,5 @@ if __name__ == '__main__':
         # Filter by shape
         mask = filter_by_shape(mask, 0.85)
 
-        np.save(args.pred_file, mask)
+        np.save(args.pred_folder+img_name[:-4], mask)
+
