@@ -1,24 +1,10 @@
-import morphsnakes as ms
-from skimage.measure import label, regionprops
-from skimage.segmentation import (morphological_chan_vese,
-                                  morphological_geodesic_active_contour,
-                                  inverse_gaussian_gradient,
-                                  checkerboard_level_set)
-
 import numpy as np
-from matplotlib import pyplot as plt
-import matplotlib
-
-matplotlib.use('Qt5Agg')
-
-
+from skimage.measure import label, regionprops
 
 
 def load_reference_shapes():
     regerence_shapes = np.load('maska_tenzor.npy').astype('float32')
-
     regerence_shapes -= 0.5
-
     regerence_shapes = np.sign(regerence_shapes)
 
     return regerence_shapes
@@ -35,11 +21,10 @@ def get_cut_by_centroid(source, centroid, sizes):
 
 
 def filter_by_shape(mask, threshold):
+    """Removes elements from the input binary image which dont met sufficient similarity with some of the reference shapes."""
     mask_c = mask.copy()
     regions = regionprops(label(mask_c))
-
     reference_shapes = load_reference_shapes()
-
     cut_shape = (reference_shapes.shape[1], reference_shapes.shape[2])
 
     remove_x_list = []
@@ -47,7 +32,7 @@ def filter_by_shape(mask, threshold):
 
     for region in regions:
         cut = get_cut_by_centroid(mask_c, region.centroid, cut_shape)
-        if cut.size < cut_shape[0]*cut_shape[1]:
+        if cut.size < cut_shape[0] * cut_shape[1]:
             remove_x_list.extend(region.coords[:, 0].tolist())
             remove_y_list.extend(region.coords[:, 1].tolist())
             continue
@@ -64,8 +49,5 @@ def filter_by_shape(mask, threshold):
             remove_y_list.extend(region.coords[:, 1].tolist())
 
     mask_c[remove_x_list, remove_y_list] = False
-
-    # plt.imshow(mask)
-    # plt.show()
 
     return mask_c

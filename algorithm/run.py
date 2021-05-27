@@ -8,10 +8,6 @@ from filter_large import remove_regions_by_size
 from fill_points import fill_points
 from shape_filtering import filter_by_shape
 from preprocessing.preprocessing_threshold import create_hue_mask
-from matplotlib import pyplot as plt
-import matplotlib
-
-matplotlib.use('Qt5Agg')
 
 parser = argparse.ArgumentParser(description='Generates sequences for labeling task')
 parser.add_argument('input_file', metavar='INPUT', type=str, help='Path to .npy file containing input image.')
@@ -20,41 +16,33 @@ parser.add_argument('label_file', metavar='LBL', type=str, help='Path to .npy fi
                     default=None)
 
 
-def plot_comparison(y_true, y_pred):
-    y_true = y_true[:, :, None].astype('float32')
-    y_pred = y_pred[:, :, None].astype('float32')
-    view = np.concatenate([y_true, y_pred, np.zeros(y_true.shape)], axis=-1)
-    plt.figure()
-    plt.imshow(view)
-    plt.show()
+def get_hsv_filter(input_file):
+    image = io.imread(input_file, as_gray=False)
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    hue_mask = create_hue_mask(image).astype('float32')
+    hue_mask /= 255.0
+    return hue_mask
 
 
 if __name__ == '__main__':
-    # Load parameters
+    # Load
     args = parser.parse_args()
-
-    image = io.imread(args.input_file, as_gray=False)
     image_gs = io.imread(args.input_file, as_gray=True)
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-    if args.label_file:
-        label_mask = io.imread(args.label_file, as_gray=False)
-        label_mask = label_mask[:, :, 0].astype('float32')
-        label_mask /= 255.0
-        label_mask = label_mask > 0.3
-    hue_mask = create_hue_mask(image).astype('float32')
-    hue_mask /= 255.0
+    hue_mask = get_hsv_filter(args.input_file)
+
+    # Filter by hue
     image = image_gs * hue_mask + (hue_mask < 0.5).astype('float32')
 
+    # Apply necessary condition
     heat_map = get_necessary_heatmap(image)
-
     mask = heat_map > 0.2
 
+    # Remove regions by size + fill points
     mask = remove_regions_by_size(mask, 60, 500)
-
     mask = fill_points(image, mask, 0.3)
-
     mask = remove_regions_by_size(mask, 60, 500)
 
+    # Filter by shape
     mask = filter_by_shape(mask, 0.85)
 
     np.save(args.pred_file, mask)

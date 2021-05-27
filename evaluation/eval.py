@@ -1,11 +1,10 @@
 import argparse
 
-from matplotlib.pyplot import imread
-import numpy as np
-from sklearn.metrics import f1_score, confusion_matrix
-from sklearn.metrics import plot_confusion_matrix
-from matplotlib import pyplot as plt
 import matplotlib
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.pyplot import imread
+from sklearn.metrics import f1_score, confusion_matrix
 
 matplotlib.use('Qt5Agg')
 
@@ -35,7 +34,7 @@ if __name__ == '__main__':
 
     cf_mat = confusion_matrix(y_true, y_pred)
     cf_mat_2 = confusion_matrix(1.0 - y_true, 1.0 - y_pred)
-    print(score)
+    print(f"F1-score:{score}")
     print(cf_mat)
 
     plt.figure()

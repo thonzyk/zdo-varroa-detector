@@ -1,37 +1,11 @@
-import morphsnakes as ms
 from skimage.measure import label, regionprops
-from skimage.segmentation import (morphological_chan_vese,
-                                  morphological_geodesic_active_contour,
-                                  inverse_gaussian_gradient,
-                                  checkerboard_level_set)
-
-import numpy as np
-from matplotlib import pyplot as plt
-import matplotlib
-
-matplotlib.use('Qt5Agg')
 
 REGION_SIZE = 24
 
-INITIAL_MASK = np.ones((24, 24)).astype('bool')
-
-# INITIAL_MASK[1:-1,1:-1] = True
-
-INITIAL_MASK[12, 12] = False
-
-
-def store_evolution_in(lst):
-    """Returns a callback function to store the evolution of the level sets in
-    the given list.
-    """
-
-    def _store(x):
-        lst.append(np.copy(x))
-
-    return _store
-
 
 def fill_points(image, mask, threshold):
+    """Takes each element of binary mask image, look at the according place to the non-binary image and applies
+    brightness thresholding. The result binary mask is returned."""
     regions = regionprops(label(mask))
 
     morph_regions_coord = []
@@ -54,8 +28,7 @@ def fill_points(image, mask, threshold):
 
         cuts_images.append(image[x_from:x_to, y_from:y_to])
 
-    # apply morph snakes on image cuts
-
+    # fill the dark regions by simple thresholding
     for i in range(len(cuts_images)):
         cut = cuts_images[i]
         region = morph_regions_coord[i]
