@@ -2,6 +2,7 @@ import numpy as np
 import argparse
 from skimage import io
 import cv2
+import os
 
 from necessary_condition import get_necessary_heatmap
 from filter_large import remove_regions_by_size
@@ -26,23 +27,28 @@ def get_hsv_filter(input_file):
 
 if __name__ == '__main__':
     # Load
-    args = parser.parse_args()
-    image_gs = io.imread(args.input_file, as_gray=True)
-    hue_mask = get_hsv_filter(args.input_file)
+    extension_png = ['png']
+    mask_names = [fn for fn in os.listdir(args.label_file)
+                  if any(fn.endswith(ext) for ext in extension_png)]
+    for mask_name in mask_names:
 
-    # Filter by hue
-    image = image_gs * hue_mask + (hue_mask < 0.5).astype('float32')
+        args = parser.parse_args()
+        image_gs = io.imread(args.input_file+'/'+mask_name[:-3]+'jpg', as_gray=True)
+        hue_mask = get_hsv_filter(args.input_file)
 
-    # Apply necessary condition
-    heat_map = get_necessary_heatmap(image)
-    mask = heat_map > 0.2
+        # Filter by hue
+        image = image_gs * hue_mask + (hue_mask < 0.5).astype('float32')
 
-    # Remove regions by size + fill points
-    mask = remove_regions_by_size(mask, 60, 500)
-    mask = fill_points(image, mask, 0.3)
-    mask = remove_regions_by_size(mask, 60, 500)
+        # Apply necessary condition
+        heat_map = get_necessary_heatmap(image)
+        mask = heat_map > 0.2
 
-    # Filter by shape
-    mask = filter_by_shape(mask, 0.85)
+        # Remove regions by size + fill points
+        mask = remove_regions_by_size(mask, 60, 500)
+        mask = fill_points(image, mask, 0.3)
+        mask = remove_regions_by_size(mask, 60, 500)
 
-    np.save(args.pred_file, mask)
+        # Filter by shape
+        mask = filter_by_shape(mask, 0.85)
+
+        np.save(args.pred_file, mask)
