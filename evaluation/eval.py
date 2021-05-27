@@ -18,8 +18,8 @@ parser.add_argument('pred_dir', metavar='PRED', type=str,
 if __name__ == '__main__':
     args = parser.parse_args()
 
-    label_names = next(os.walk(args.label_dir))
-    pred_names = next(os.walk(args.pred_dir))
+    _, _, label_names = next(os.walk(args.label_dir))
+    _, _, pred_names = next(os.walk(args.pred_dir))
     names = [el.split('.')[0] for el in label_names]
 
     score = 0.0
@@ -28,10 +28,10 @@ if __name__ == '__main__':
         label_file = name + '.png'
         pred_file = name + '.npy'
 
-        y_true = imread(label_file)
+        y_true = imread(args.label_dir + label_file)
         y_true = y_true[:, :, 1] > 0.1
 
-        y_pred = np.load(pred_file)
+        y_pred = np.load(args.pred_dir + pred_file)
 
         y_true = y_true.astype('float32')
         y_pred = y_pred.astype('float32')
