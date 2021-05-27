@@ -13,6 +13,7 @@ Program spouštěte pomocí skriptu **run.py** s následujícími argumenty:
 ## Návod ke spuštění evaluace
 
 Vyhodnocení můžete spustit pomocí skriptu **eval.py** s následujícími argumenty:
+Pro vyhodnocení používáme data z CVATu ve formátu segmentation mask
 
 1. cesta ke složce s referenčními anotacemi (.png formát)
 
