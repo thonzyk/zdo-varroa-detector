@@ -3,7 +3,7 @@ from scipy import signal
 
 
 def get_distribution_mask():
-    return np.load('nec_cond_maxk.npy')
+    return np.load('nec_cond_mask.npy')
 
 
 def get_necessary_heatmap(image):
