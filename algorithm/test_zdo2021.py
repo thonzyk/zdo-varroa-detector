@@ -1,4 +1,4 @@
-# import pytest
+import pytest
 import os
 import skimage.io
 from skimage.draw import polygon
